@@ -5,6 +5,7 @@ export const useGlobalStore = defineStore('global', {
     return {
       isSidebarMinimized: false,
       userName: 'Eddie',
+      studentCode: 1001,
       uploadedFileName: '',
     }
   },

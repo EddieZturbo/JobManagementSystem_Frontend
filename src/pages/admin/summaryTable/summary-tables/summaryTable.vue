@@ -7,7 +7,7 @@
           <thead>
             <tr class="styled-header">
               <th>序号</th>
-              <th>排名</th>
+              <!-- <th>排名</th> -->
               <th>姓名</th>
               <th>学号</th>
               <th>分数</th>
@@ -22,7 +22,7 @@
           <tbody>
             <tr v-for="user in users" :key="user.ranking" class="styled-tbody">
               <td>{{ user.id }}</td>
-              <td>{{ user.ranking }}</td>
+              <!-- <td>{{ user.ranking }}</td> -->
               <td>{{ user.studentName }}</td>
               <td>{{ user.studentCode }}</td>
               <td>{{ user.score }}</td>
