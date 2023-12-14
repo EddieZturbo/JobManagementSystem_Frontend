@@ -6,7 +6,6 @@ import Page404Layout from '../layouts/Page404Layout.vue'
 import fileUpload from '../pages/admin/forms/form-elements/FormElements.vue'
 
 import RouteViewComponent from '../layouts/RouterBypass.vue'
-import UIRoute from '../pages/admin/ui/route'
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -107,6 +106,29 @@ const routes: Array<RouteRecordRaw> = [
         ],
       },
       {
+        name: 'ui',
+        path: 'ui',
+        component: RouteViewComponent,
+        children: [
+          {
+            name: 'lists',
+            path: 'lists',
+            component: () => import('../pages/admin/ui/ui/Lists.vue'),
+            meta: {
+              wikiLink: 'https://github.com/epicmaxco/vuestic-admin/wiki/Charts',
+            },
+          },
+          {
+            name: 'tree-view',
+            path: 'tree-view',
+            component: () => import('../pages/admin/ui/ui/tree-view.vue'),
+            meta: {
+              wikiLink: 'https://github.com/epicmaxco/vuestic-admin/wiki/Progress-Bars',
+            },
+          },
+        ],
+      },
+      {
         name: 'pages',
         path: 'pages',
         component: RouteViewComponent,
@@ -123,7 +145,6 @@ const routes: Array<RouteRecordRaw> = [
           },
         ],
       },
-      UIRoute,
     ],
   },
   {
