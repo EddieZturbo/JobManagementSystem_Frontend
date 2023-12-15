@@ -59,6 +59,14 @@ export default {
       ],
     },
     {
+      name: 'works',
+      displayName: '作业管理',
+      meta: {
+        icon: 'vuestic-iconset-forms',
+      },
+      disabled: true,
+    },
+    {
       name: 'maps',
       displayName: '作业批改',
       meta: {
@@ -69,6 +77,14 @@ export default {
     {
       name: 'forms',
       displayName: '作业提交',
+      meta: {
+        icon: 'vuestic-iconset-forms',
+      },
+      disabled: true,
+    },
+    {
+      name: 'files',
+      displayName: '文件提交',
       meta: {
         icon: 'vuestic-iconset-forms',
       },

@@ -14,25 +14,63 @@
 </template>
 
 <script setup lang="ts">
-  import { ref } from 'vue'
   import { VaCard, VaCardContent } from 'vuestic-ui'
+  import { ref, inject, onMounted } from 'vue'
+
+  const $axios: any = inject('$axios') // Access global properties
+
+  let commitedNum = ref(0)
+  let unexaminedNum = ref(0)
+  let unqualifyNum = ref(0)
+
+  async function fetchJobsStatistic() {
+    try {
+      const params = {
+        is_commit: 1,
+      }
+      const response = await $axios.post('/api/job/list', params)
+      commitedNum.value = response.data.length
+    } catch (error) {
+      console.log(error)
+    }
+    try {
+      const params = {
+        score: 0,
+      }
+      const response = await $axios.post('/api/job/list', params)
+      unexaminedNum.value = response.data.length
+    } catch (error) {
+      console.log(error)
+    }
+    try {
+      const params = {
+        is_qualify: 0,
+      }
+      const response = await $axios.post('/api/job/list', params)
+      unqualifyNum.value = response.data.length
+    } catch (error) {
+      console.log(error)
+    }
+  }
+
+  onMounted(() => fetchJobsStatistic()) // Fetch JobsStatistic when component is mounted
 
   const infoTiles = ref([
     {
       color: 'success',
-      value: '803',
+      value: commitedNum,
       text: '已提交',
       icon: '',
     },
     {
       color: 'info',
-      value: '5',
-      text: '未提交',
+      value: unexaminedNum,
+      text: '未批改',
       icon: '',
     },
     {
       color: 'danger',
-      value: '57',
+      value: unqualifyNum,
       text: '不合格',
       icon: '',
     },

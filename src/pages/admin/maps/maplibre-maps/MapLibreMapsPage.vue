@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/v-on-event-hyphenation -->
 <template>
   <div>
     <VaSelect v-model="value" label="班级" :options="options" multiple>
@@ -16,7 +17,6 @@
     <br />
     <VaSwitch v-model="approved" left-label="true" label="已批改 " color="success" />
     <VaSwitch v-model="unapproved" style="padding-left: 20px" left-label="true" label="未批改 " color="warning" />
-    <VaSwitch v-model="overdue" style="padding-left: 20px" left-label="true" label="逾期未提交 " color="danger" />
   </div>
   <br />
   <br />
@@ -46,9 +46,29 @@
           <va-icon name="remove_red_eye" color="background-element" />
         </va-list-item-section>
 
-        <va-button disabled="true" color="info" gradient class="mr-6 mb-2"> 已批改 </va-button>
-        <va-button disabled="true" color="danger" gradient class="mr-6 mb-2"> 逾期未提交 </va-button>
-        <va-button color="warning" gradient class="mr-6 mb-2" @click="previewFile(file.fileUrl)"> 待批改 </va-button>
+        <va-button v-if="file.jobStatus === 1" color="info" gradient class="mr-6 mb-2" @click="rateFile(file.fileUrl)">
+          重新批改
+        </va-button>
+        <va-button v-if="file.jobStatus === 1" disabled="true" color="info" class="mr-6 mb-2"> 已批改 </va-button>
+        <va-button
+          v-if="file.jobStatus === 1"
+          color="info"
+          gradient
+          class="mr-6 mb-2"
+          @click="previewFile(file.fileUrl)"
+        >
+          预览
+        </va-button>
+        <va-button v-if="file.jobStatus === 0" disabled="true" color="warning" class="mr-6 mb-2"> 未批改 </va-button>
+        <va-button
+          v-if="file.jobStatus === 0"
+          color="warning"
+          gradient
+          class="mr-6 mb-2"
+          @click="rateFile(file.fileUrl)"
+        >
+          批改
+        </va-button>
       </va-list-item>
     </va-list>
   </div>
@@ -71,9 +91,8 @@
   const options = ref(['one', 'two', 'three', 'four', 'five', 'six', 'seven', 'eight', 'nine'])
   const value = ref(['one', 'two'])
 
-  const approved = ref(false)
+  const approved = ref(true)
   const unapproved = ref(true)
-  const overdue = ref(false)
 
   const deleteChip = (chip) => {
     value.value = value.value.filter((v) => v !== chip)
@@ -85,11 +104,15 @@
       console.log(response.data)
       response.data.forEach((element) => {
         element.studentName = 'Eddie'
-        files.value.push({
-          studentName: element.studentName,
-          fileName: element.fileName,
-          fileUrl: element.url,
+        $axios.get('/api/job/get/' + element.fileName.split('.')[0]).then((res) => {
+          files.value.push({
+            studentName: element.studentName,
+            fileName: element.fileName,
+            fileUrl: element.url,
+            jobStatus: res.data.jobStatus,
+          })
         })
+        console.log('file:', files.value)
       })
     } catch (error) {
       console.log(error)
@@ -101,8 +124,14 @@
     fileSeperate = fileName.split('/')
     fileName = fileSeperate[fileSeperate.length - 1]
     uploadedFileName.value = fileName
-    console.log('previewFile:', fileName)
-    router.push({ name: 'dashboard' })
+    router.push({ name: 'dashboard', params: { toRate: false } })
+  }
+
+  const rateFile = (fileName) => {
+    fileSeperate = fileName.split('/')
+    fileName = fileSeperate[fileSeperate.length - 1]
+    uploadedFileName.value = fileName
+    router.push({ name: 'dashboard', params: { toRate: true } })
   }
 
   fetchData()

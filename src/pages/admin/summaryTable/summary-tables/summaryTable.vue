@@ -21,7 +21,7 @@
 
           <tbody>
             <tr v-for="user in users" :key="user.ranking" class="styled-tbody">
-              <td>{{ user.id }}</td>
+              <td>{{ user.no }}</td>
               <!-- <td>{{ user.ranking }}</td> -->
               <td>{{ user.studentName }}</td>
               <td>{{ user.studentCode }}</td>

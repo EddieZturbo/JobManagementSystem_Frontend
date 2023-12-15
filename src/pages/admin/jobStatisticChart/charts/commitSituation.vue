@@ -1,13 +1,13 @@
 <template>
   <div class="charts">
     <dashboard-info-block />
-    <dashboard-charts />
+    <progress-bars-2 />
   </div>
 </template>
 
-<script setup lang="ts">
-  import DashboardCharts from '../../dashboard/DashboardCharts.vue'
+<script setup>
   import DashboardInfoBlock from '../../dashboard/DashboardInfoBlock.vue'
+  import ProgressBars2 from './ProgressBars2.vue'
 </script>
 
 <style lang="scss">

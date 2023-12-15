@@ -3,7 +3,9 @@ import { createRouter, createWebHistory, RouteRecordRaw } from 'vue-router'
 import AuthLayout from '../layouts/AuthLayout.vue'
 import AppLayout from '../layouts/AppLayout.vue'
 import Page404Layout from '../layouts/Page404Layout.vue'
-import fileUpload from '../pages/admin/forms/form-elements/FormElements.vue'
+import homeworkUpload from '../pages/admin/forms/form-elements/FormElements.vue'
+import fileUpload from '../pages/admin/files/files-elements/FileElements.vue'
+import workManage from '../pages/admin/works/works-elements/WorkElements.vue'
 
 import RouteViewComponent from '../layouts/RouterBypass.vue'
 
@@ -19,7 +21,7 @@ const routes: Array<RouteRecordRaw> = [
     children: [
       {
         name: 'dashboard',
-        path: 'dashboard',
+        path: 'dashboard/:toRate',
         component: () => import('../pages/admin/maps/maplibre-maps/FileReview.vue'),
       },
       {
@@ -80,7 +82,23 @@ const routes: Array<RouteRecordRaw> = [
       {
         name: 'forms',
         path: 'forms',
+        component: homeworkUpload,
+        meta: {
+          wikiLink: 'https://github.com/epicmaxco/vuestic-admin/wiki/inputs',
+        },
+      },
+      {
+        name: 'files',
+        path: 'files',
         component: fileUpload,
+        meta: {
+          wikiLink: 'https://github.com/epicmaxco/vuestic-admin/wiki/inputs',
+        },
+      },
+      {
+        name: 'works',
+        path: 'works',
+        component: workManage,
         meta: {
           wikiLink: 'https://github.com/epicmaxco/vuestic-admin/wiki/inputs',
         },

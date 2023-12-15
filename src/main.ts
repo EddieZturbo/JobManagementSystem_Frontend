@@ -16,6 +16,7 @@ app.use(i18n)
 app.use(createVuestic({ config: vuesticGlobalConfig }))
 // app.config.globalProperties.$axios = axios
 app.provide('$axios', axios)
+app.provide('$router', router)
 
 if (import.meta.env.VITE_APP_GTM_ENABLED) {
   app.use(
