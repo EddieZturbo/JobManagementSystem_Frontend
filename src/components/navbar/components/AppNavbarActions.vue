@@ -26,7 +26,6 @@
   defineEmits<{
     (e: 'update:isTopBar', isTopBar: boolean): void
   }>()
-
 </script>
 
 <style lang="scss" scoped>
