@@ -1,3 +1,4 @@
+<!-- eslint-disable prettier/prettier -->
 <template>
   <div v-if="showModal" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 items-end">
     <VaButton text-color="#fffff0" class="mr-3 mb-2" @click="showModal = !showModal"> Esc </VaButton>
