@@ -20,8 +20,8 @@
           preset="secondary"
           class="w-full"
           @click="
+            homeworkAId = row.rowData.homeworkId;
             row.toggleRowDetails()
-            homeworkAId = row.rowData.homeworkId
           "
         >
           {{ isExpanded ? '隐藏详情' : '查看详情' }}
