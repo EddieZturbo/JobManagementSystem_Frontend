@@ -30,9 +30,15 @@
         <div class="flex gap-2">
           <form>
             <tr>
-              <td><h3>账号：</h3></td>
-              <td><h3>姓名：</h3></td>
-              <td><h3>相似度：</h3></td>
+              <td>
+                <h3>账号：</h3>
+              </td>
+              <td>
+                <h3>姓名：</h3>
+              </td>
+              <td>
+                <h3>相似度：</h3>
+              </td>
             </tr>
             <tr v-for="(item, index) in rowData.similarList" :key="index">
               <td>
@@ -129,19 +135,25 @@
 <style scoped>
   .button {
     padding: 0px 0px;
-    background-color: transparent; /* No background */
-    color: rgb(110, 133, 200); /* Change text color as per your requirement */
-    border: rgb(110, 133, 200); /* No border */
+    background-color: transparent;
+    /* No background */
+    color: rgb(110, 133, 200);
+    /* Change text color as per your requirement */
+    border: rgb(110, 133, 200);
+    /* No border */
     cursor: pointer;
     transition: background-color 0.3s ease;
     height: 30px;
-    text-decoration: underline; /* Add underline */
+    text-decoration: underline;
+    /* Add underline */
     font-style: italic;
     margin-bottom: 2px;
   }
 
   .button:hover {
-    background-color: transparent; /* No background on hover */
-    color: #0056b3; /* Change text color on hover */
+    background-color: transparent;
+    /* No background on hover */
+    color: #0056b3;
+    /* Change text color on hover */
   }
 </style>
