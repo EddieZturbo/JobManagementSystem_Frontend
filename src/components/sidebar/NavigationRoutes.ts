@@ -102,10 +102,10 @@ export default {
           name: 'lists',
           displayName: '抄袭检测',
         },
-        {
-          name: 'tree-view',
-          displayName: '汇总数据',
-        },
+        // {
+        //   name: 'tree-view',
+        //   displayName: '汇总数据',
+        // },
       ],
     },
   ] as INavigationRoute[],

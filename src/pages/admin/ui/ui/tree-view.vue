@@ -4,8 +4,9 @@
   </div>
 
   <div v-if="!showModal">
+    <VaButton text-color="#fffff0" class="mr-3 mb-2" @click="returnDetectPage"> 返回超级检测 </VaButton>
     <VaDataTable
-      :items="users"
+      :items="similarities"
       :columns="columns"
       :cell-bind="getCellBind"
       :per-page="perPage"
@@ -17,7 +18,10 @@
           :icon="isExpanded ? 'va-arrow-up' : 'va-arrow-down'"
           preset="secondary"
           class="w-full"
-          @click="row.toggleRowDetails()"
+          @click="
+            row.toggleRowDetails()
+            homeworkAId = row.rowData.homeworkId
+          "
         >
           {{ isExpanded ? '隐藏详情' : '查看详情' }}
         </VaButton>
@@ -25,20 +29,24 @@
       <template #expandableRow="{ rowData }">
         <div class="flex gap-2">
           <form>
-            <th>账号：</th>
-            <td>
-              <br />
-              <h3 style="color: rgb(110, 133, 200)">{{ rowData.username }}</h3>
-            </td>
-            <th>姓名：</th>
-            <td>
-              <br />
-              <h3 style="color: rgb(110, 133, 200)">{{ rowData.name }}</h3>
-            </td>
-            <th>相似度：</th>
-            <td>
-              <VaButton preset="primary" @click="showModal = !showModal"> 查看相似内容 </VaButton>
-            </td>
+            <tr>
+              <td><h3>账号：</h3></td>
+              <td><h3>姓名：</h3></td>
+              <td><h3>相似度：</h3></td>
+            </tr>
+            <tr v-for="(item, index) in rowData.similarList" :key="index">
+              <td>
+                <h3 style="color: rgb(110, 133, 200)">{{ item.account }}</h3>
+              </td>
+              <td>
+                <h3 style="color: rgb(110, 133, 200)">{{ item.name }}</h3>
+              </td>
+              <td>
+                <Button class="button" @click="showSimilarContent(item.homeworkId)"
+                  >{{ item.similarity }} 查看相似内容
+                </Button>
+              </td>
+            </tr>
           </form>
         </div>
       </template>
@@ -56,14 +64,18 @@
 
   <div v-if="showModal">
     <div style="display: flex; width: 100%">
-      <vue-pdf-embed v-if="state.pdf" :source="state.pdf" style="width: 100%; min-width: 600px; margin-right: 10px" />
-      <vue-pdf-embed v-if="state.pdf" :source="state.pdf" style="width: 100%; min-width: 600px" />
+      <vue-pdf-embed v-if="fileA.pdf" :source="fileA.pdf" style="width: 100%; min-width: 600px; margin-right: 10px" />
+      <vue-pdf-embed v-if="fileB.pdf" :source="fileB.pdf" style="width: 100%; min-width: 600px" />
     </div>
   </div>
 </template>
 
 <script>
   import VuePdfEmbed from 'vue-pdf-embed'
+  import { storeToRefs } from 'pinia'
+  import { useGlobalStore } from '../../../../stores/global-store'
+  const GlobalStore = useGlobalStore()
+  const { matrix } = storeToRefs(GlobalStore)
   export default {
     components: {
       VuePdfEmbed,
@@ -72,55 +84,15 @@
     data() {
       return {
         showModal: false,
-        state: { pdf: 'http://127.0.0.1:5173/upload/1729480862809071656.pdf' },
-        users: [
-          {
-            id: 1,
-            name: 'Leanne Graham',
-            username: 'Bret',
-            status: '0',
-            phone: '1-770-736-8031 x56442',
-            website: 'hildegard.org',
-          },
-          {
-            id: 2,
-            name: 'Ervin Howell',
-            username: 'Antonette',
-            status: '1',
-            phone: '010-692-6593 x09125',
-            website: 'anastasia.net',
-          },
-          {
-            id: 3,
-            name: 'Clementine Bauch',
-            username: 'Samantha',
-            status: '0',
-            phone: '1-463-123-4447',
-            website: 'ramiro.info',
-          },
-          {
-            id: 4,
-            name: 'Patricia Lebsack',
-            username: 'Karianne',
-            status: '1',
-            phone: '493-170-9623 x156',
-            website: 'kale.biz',
-          },
-          {
-            id: 5,
-            name: 'Chelsey Dietrich',
-            username: 'Kamren',
-            status: '0',
-            phone: '(254)954-1289',
-            website: 'demarco.info',
-          },
-        ],
+        fileA: { pdf: '' },
+        fileB: { pdf: '' },
+        homeworkAId: '',
+        homeworkBId: '',
+        similarities: matrix.value,
         columns: [
-          { key: 'id', label: '序号', sortable: true },
-          { key: 'username', label: '姓名', sortable: true },
-          { key: 'phone', label: '成绩' },
-          { key: 'phone', label: '评语' },
-          { key: 'id', label: '最高相似度' },
+          { key: 'account', label: '账号', sortable: true },
+          { key: 'name', label: '姓名' },
+          { key: 'maxSimilarity', label: '最高相似度' },
           { key: 'actions', label: '详情' },
         ],
       }
@@ -130,5 +102,46 @@
         return Math.ceil(this.perPage)
       },
     },
+    methods: {
+      returnDetectPage() {
+        this.$router.push({ name: 'lists' })
+      },
+      showSimilarContent(homeworkBId) {
+        this.homeworkBId = homeworkBId
+        console.log(this.homeworkAId, this.homeworkBId)
+        this.fileA.pdf = 'http://127.0.0.1:5173/upload/' + this.homeworkAId + '.pdf'
+        this.fileB.pdf = 'http://127.0.0.1:5173/upload/' + this.homeworkBId + '.pdf'
+        console.log(this.fileA.pdf, this.fileB.pdf)
+        // this.$axios
+        //   .post('/api/mark_similarity?homeworkIdOne=' + this.homeworkAId + '&homeworkIdTwo=' + this.homeworkBId)
+        //   .then((res) => {
+        //     console.log(res)
+        //     this.homeworkAId = res.data.highlightPdf[0]
+        //     this.homeworkBId = res.data.highlightPdf[0]
+        // this.fileA.pdf = 'http://127.0.0.1:5173/upload/' + this.homeworkAId + '.pdf'
+        // this.fileB.pdf = 'http://127.0.0.1:5173/upload/' + this.homeworkBId + '.pdf'
+        //   })
+        this.showModal = !this.showModal
+      },
+    },
   }
 </script>
+<style scoped>
+  .button {
+    padding: 0px 0px;
+    background-color: transparent; /* No background */
+    color: rgb(110, 133, 200); /* Change text color as per your requirement */
+    border: rgb(110, 133, 200); /* No border */
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    height: 30px;
+    text-decoration: underline; /* Add underline */
+    font-style: italic;
+    margin-bottom: 2px;
+  }
+
+  .button:hover {
+    background-color: transparent; /* No background on hover */
+    color: #0056b3; /* Change text color on hover */
+  }
+</style>

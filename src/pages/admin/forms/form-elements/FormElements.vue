@@ -42,7 +42,7 @@
 </template>
 
 <script setup>
-  import { ref, inject, computed } from 'vue'
+  import { ref, inject, computed, onMounted } from 'vue'
   import { useModal } from 'vuestic-ui'
   import { storeToRefs } from 'pinia'
   import { useGlobalStore } from '../../../..//stores/global-store'
@@ -57,7 +57,22 @@
   const { confirm } = useModal()
   const ifUpload = ref(false)
 
-  const options = ref(['WebDev-作业管理系统前后端开发'])
+  onMounted(() => {
+    $axios.post('/api/work/list').then((result) => {
+      if (result.code === 200) {
+        console.log(result.data)
+        result.data.forEach((item) => {
+          $axios.post('/api/course/list', { course_code: item.courseCode }).then((result) => {
+            if (result.code === 200) {
+              options.value.push(result.data[0].courseName + '-' + item.workName)
+            }
+          })
+        })
+      }
+    })
+  })
+
+  const options = ref([])
 
   const value = ref([])
 
@@ -115,7 +130,6 @@
       confirm('作业文件上传失败，请重新上传')
     }
   }
-  //TODO 作业的id和文件名绑定关系
   //将作业提交信息存储到数据库
   const insertJob = async (file) => {
     console.log(file)

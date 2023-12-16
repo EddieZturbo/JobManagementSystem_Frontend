@@ -8,10 +8,19 @@
       highlight-matched-text
       width="100%"
     />
-    <VaInput v-model.number="perPage" type="number" placeholder="Items..." label="Items per page" />
-    <VaInput v-model.number="currentPage" type="number" placeholder="Page..." label="Current page" />
-    <VaButton color="info" class="mr-6 mb-2" @click="showModal = !showModal"> 抄袭检测 </VaButton>
-    <VaButton color="info" class="mr-6 mb-2"> 辅助批改 </VaButton>
+    <VaSelect
+      v-model="course"
+      label="选择要检测的课程作业"
+      placeholder="下拉选择课程作业"
+      color="primary"
+      :options="courses"
+      searchable
+      highlight-matched-text
+      clearable="true"
+      clearable-icon="va-clear"
+    />
+    <VaButton v-if="jobs[0]" color="info" class="mr-6 mb-2" @click="showModal = !showModal"> 抄袭检测 </VaButton>
+    <VaButton v-if="jobs[0]" color="info" class="mr-6 mb-2"> 辅助批改 </VaButton>
   </div>
 
   <div>
@@ -26,11 +35,12 @@
 
   <div>
     <VaDataTable
-      :items="users"
+      :items="jobs"
       :columns="columns"
       :cell-bind="getCellBind"
       :per-page="perPage"
       :current-page="currentPage"
+      :pages="pages"
       selectable
     >
       <template #cell(actions)="{ row, isExpanded }">
@@ -76,7 +86,14 @@
   </div>
 
   <div>
-    <VaModal v-model="showModal" ok-text="Apply" close-button fullscreen="true" @ok="cpDetect">
+    <VaModal
+      v-model="showModal"
+      ok-text="Apply"
+      close-button
+      fullscreen="true"
+      @ok="cpDetect"
+      @close="ifUProgress = false"
+    >
       <h3 class="va-h3">抄袭检测</h3>
       <br />
       <br />
@@ -96,6 +113,10 @@
 
 <script>
   import { sleep } from '@amcharts/amcharts5/.internal/core/util/Time'
+  import { storeToRefs } from 'pinia'
+  import { useGlobalStore } from '../../../../stores/global-store'
+  const GlobalStore = useGlobalStore()
+  const { matrix } = storeToRefs(GlobalStore)
 
   export default {
     inject: ['$axios', '$router'],
@@ -105,61 +126,21 @@
         jobStatus: 0,
         options: ['fingerprint_jar', 'ppioin_cnn', 'simhash_cnn'],
         value: 'fingerprint_jar',
-        users: [
-          {
-            id: 1,
-            name: 'Leanne Graham',
-            username: 'Bret',
-            status: '0',
-            phone: '1-770-736-8031 x56442',
-            website: 'hildegard.org',
-          },
-          {
-            id: 2,
-            name: 'Ervin Howell',
-            username: 'Antonette',
-            status: '1',
-            phone: '010-692-6593 x09125',
-            website: 'anastasia.net',
-          },
-          {
-            id: 3,
-            name: 'Clementine Bauch',
-            username: 'Samantha',
-            status: '0',
-            phone: '1-463-123-4447',
-            website: 'ramiro.info',
-          },
-          {
-            id: 4,
-            name: 'Patricia Lebsack',
-            username: 'Karianne',
-            status: '1',
-            phone: '493-170-9623 x156',
-            website: 'kale.biz',
-          },
-          {
-            id: 5,
-            name: 'Chelsey Dietrich',
-            username: 'Kamren',
-            status: '0',
-            phone: '(254)954-1289',
-            website: 'demarco.info',
-          },
-        ],
+        courses: [],
+        course: '',
+        jobs: [],
         columns: [
           { key: 'id', label: '序号', sortable: true },
-          { key: 'username', label: '姓名', sortable: true },
-          { key: 'name', label: '提交时间', sortable: true },
-          { key: 'status', label: '状态', name: 'status', sortable: true },
+          { key: 'studentName', label: '姓名', sortable: true },
+          { key: 'commitTime', label: '提交时间', sortable: true },
+          { key: 'jobStatus', label: '状态', name: 'jobStatus', sortable: true },
+          // { key: 'phone', label: '附件' },
+          // { key: 'phone', label: '辅助评分分数' },
           { key: 'phone', label: '学生作业' },
-          { key: 'phone', label: '附件' },
-          { key: 'phone', label: '辅助评分分数' },
-          { key: 'phone', label: '学生作业' },
-          { key: 'phone', label: '成绩' },
-          { key: 'phone', label: '评语' },
+          { key: 'score', label: '成绩' },
+          // { key: 'phone', label: '评语' },
         ],
-        perPage: 3,
+        perPage: 10,
         currentPage: 1,
         showModal: false,
         options1: ['0.1', '0.2', '0.3', '0.4', '0.5', '0.6', '0.7', '0.8', '0.9', '1'],
@@ -168,7 +149,7 @@
     },
     computed: {
       pages() {
-        return Math.ceil(this.perPage)
+        return Math.ceil(this.jobs.length / this.perPage)
       },
     },
     watch: {
@@ -187,19 +168,71 @@
         },
         immediate: true,
       },
+      course: {
+        handler(value) {
+          let courseCode = ''
+          this.$axios.post('/api/course/list', { course_name: value.split('-')[0] }).then((result) => {
+            if (result.code === 200) {
+              courseCode = result.data[0].courseCode
+              this.$axios
+                .post('/api/job/list', {
+                  course_code: courseCode,
+                  work_name: value.split('-')[1],
+                  is_commit: 1,
+                })
+                .then((result) => {
+                  if (result.code !== 200) {
+                    console.log(result.data)
+                    this.jobs = []
+                  } else {
+                    this.jobs = result.data
+                  }
+                })
+            }
+          })
+        },
+        immediate: true,
+      },
+    },
+    mounted() {
+      this.$axios.post('/api/work/list').then((result) => {
+        if (result.code === 200) {
+          console.log(result.data)
+          result.data.forEach((item) => {
+            this.$axios.post('/api/course/list', { course_code: item.courseCode }).then((result) => {
+              if (result.code === 200) {
+                this.courses.push(result.data[0].courseName + '-' + item.workName)
+                this.course = this.courses[0]
+                this.$axios
+                  .post('/api/job/list', {
+                    course_code: item.courseCode,
+                    work_name: item.workName,
+                    is_commit: 1,
+                  })
+                  .then((result) => {
+                    if (result.code === 200) {
+                      console.log(result.data)
+                      this.jobs = result.data
+                    }
+                  })
+              }
+            })
+          })
+        }
+      })
     },
     methods: {
       getCellBind(cell, row, column) {
-        if (column.key === 'status') {
-          if (cell === '1') {
+        if (column.key === 'jobStatus') {
+          if (cell === 1) {
             return {
               style: { color: '#67C23A' },
-              innerHTML: '<span class="status-rounded-commited">已提交</span>',
+              innerHTML: '<span class="status-rounded-commited">已批改</span>',
             }
           } else {
             return {
               style: { color: '#dF476F' },
-              innerHTML: '<span class="status-rounded-uncommited">未提交</span>',
+              innerHTML: '<span class="status-rounded-uncommited">未批改</span>',
             }
           }
         }
@@ -207,11 +240,59 @@
       cpDetect() {
         this.showModal = true
         this.ifUProgress = true
+        // this.$axios
+        // .post('/api/check_similarity_async/' + this.jobs[0].workCode + '?similar=' + this.value1)
+        // .then((res) => {
         sleep(2000).then(() => {
+          // if (res.code === 200) {
+          matrix.value = [
+            {
+              account: '1001',
+              maxSimilarity: '0.2',
+              name: 'Eddie',
+              homeworkId: '1729480862809071660',
+              similarList: [
+                {
+                  account: '10011',
+                  name: 'Irving',
+                  homeworkId: '1729480862809071660',
+                  similarity: '0',
+                },
+                {
+                  account: '10012',
+                  name: 'James',
+                  homeworkId: '1729480862809071660',
+                  similarity: '0.2',
+                },
+              ],
+            },
+            {
+              account: '1002',
+              maxSimilarity: '0.2',
+              name: 'EddieZhang',
+              homeworkId: '1729480862809071660',
+              similarList: [
+                {
+                  account: '10021',
+                  name: 'Curry',
+                  homeworkId: '1729480862809071660',
+                  similarity: '0.2',
+                },
+                {
+                  account: '10022',
+                  name: 'Durant',
+                  homeworkId: '1729480862809071660',
+                  similarity: '0',
+                },
+              ],
+            },
+          ]
           this.$router.push({ name: 'tree-view' })
           this.ifUProgress = false
           this.showModal = false
+          // }
         })
+        // })
       },
     },
   }

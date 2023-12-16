@@ -7,6 +7,7 @@ export const useGlobalStore = defineStore('global', {
       userName: 'Eddie',
       studentCode: 1001,
       uploadedFileName: '',
+      matrix: [],
     }
   },
 
