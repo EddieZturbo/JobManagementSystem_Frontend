@@ -1,5 +1,5 @@
 {
-  "name": "vuestic-admin",
+  "name": "jms-frontend",
   "private": true,
   "version": "3.1.0",
   "scripts": {
@@ -73,5 +73,20 @@
     "vite": "^4.4.6",
     "vue-eslint-parser": "^8.3.0",
     "vue-tsc": "^0.35.0"
-  }
+  },
+  "description": "<p align=\"center\">\r   <a href=\"./README.md\"> English </a> | 简体中文 | <a href=\"./README.ja-JP.md\"> 日本語 </a>\r </p>",
+  "main": ".eslintrc.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/EddieZturbo/JobManagementSystem_Frontend.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/EddieZturbo/JobManagementSystem_Frontend/issues"
+  },
+  "homepage": "https://github.com/EddieZturbo/JobManagementSystem_Frontend#readme"
 }
