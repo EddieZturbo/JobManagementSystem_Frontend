@@ -8,10 +8,8 @@
         </span>
       </template>
       <va-dropdown-content class="profile-dropdown__content">
-        <va-list-item v-for="option in options" :key="option.name" class="p-2">
-          <router-link :to="{ name: option.redirectTo }" class="profile-dropdown__item">
-            {{ t(`user.${option.name}`) }}
-          </router-link>
+        <va-list-item v-for="option in students" :key="option.studentCode" class="p-2">
+          <button @click="changeStudent(option.userName, option.studentCode)">{{ t(option.userName) }}</button>
         </va-list-item>
       </va-dropdown-content>
     </va-dropdown>
@@ -19,12 +17,34 @@
 </template>
 
 <script setup lang="ts">
-  import { ref } from 'vue'
+  import { ref, inject, onMounted } from 'vue'
   import { useI18n } from 'vue-i18n'
   import { useColors } from 'vuestic-ui'
+  import { storeToRefs } from 'pinia'
+  import { useGlobalStore } from '../../../..//stores/global-store'
+
+  const GlobalStore = useGlobalStore()
+  const { userName, studentCode } = storeToRefs(GlobalStore)
 
   const { t } = useI18n()
   const { colors } = useColors()
+  const students = ref([{ userName: '', studentCode: 0 }])
+
+  const $axios: any = inject('$axios')
+  import { AxiosResponse } from 'axios'
+
+  onMounted(() => {
+    $axios.post('/api/student/list').then((res: AxiosResponse) => {
+      res.data.forEach((item: any) => {
+        students.value.push({ userName: item.name, studentCode: item.studentCode })
+      })
+    })
+  })
+
+  const changeStudent = (name: string, code: number) => {
+    studentCode.value = code
+    userName.value = name
+  }
 
   withDefaults(
     defineProps<{

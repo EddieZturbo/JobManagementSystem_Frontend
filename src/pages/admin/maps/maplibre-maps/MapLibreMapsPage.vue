@@ -81,7 +81,7 @@
   import { storeToRefs } from 'pinia'
   import { useGlobalStore } from '../../../../stores/global-store'
   const GlobalStore = useGlobalStore()
-  const { uploadedFileName } = storeToRefs(GlobalStore)
+  const { uploadedFileName, userName } = storeToRefs(GlobalStore)
 
   const img = '/pdf.png'
   const files = ref([])
@@ -103,7 +103,6 @@
       const response = await $axios.get('/api/files')
       console.log(response.data)
       response.data.forEach((element) => {
-        element.studentName = 'Eddie'
         $axios.get('/api/job/get/' + element.fileName.split('.')[0]).then((res) => {
           files.value.push({
             studentName: element.studentName,
