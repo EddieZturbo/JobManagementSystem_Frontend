@@ -112,7 +112,7 @@
 </template>
 
 <script>
-  import { sleep } from '@amcharts/amcharts5/.internal/core/util/Time'
+  // import { sleep } from '@amcharts/amcharts5/.internal/core/util/Time'
   import { storeToRefs } from 'pinia'
   import { useGlobalStore } from '../../../../stores/global-store'
   const GlobalStore = useGlobalStore()
@@ -191,7 +191,7 @@
             }
           })
         },
-        immediate: true,
+        // immediate: true,
       },
     },
     mounted() {
@@ -199,7 +199,7 @@
         if (result.code === 200) {
           console.log(result.data)
           result.data.forEach((item) => {
-            this.$axios.post('/api/course/list', { course_code: item.courseCode }).then((result) => {
+            this.$axios.post('/api/course/list', { course_code: (item.courseCode *= 1) }).then((result) => {
               if (result.code === 200) {
                 this.courses.push(result.data[0].courseName + '-' + item.workName)
                 this.course = this.courses[0]
@@ -240,59 +240,61 @@
       cpDetect() {
         this.showModal = true
         this.ifUProgress = true
-        // this.$axios
-        // .post('/api/check_similarity_async/' + this.jobs[0].workCode + '?similar=' + this.value1)
-        // .then((res) => {
-        sleep(2000).then(() => {
-          // if (res.code === 200) {
-          matrix.value = [
-            {
-              account: '1001',
-              maxSimilarity: '0.2',
-              name: 'Eddie',
-              homeworkId: '1729480862809071660',
-              similarList: [
-                {
-                  account: '10011',
-                  name: 'Irving',
-                  homeworkId: '1729480862809071660',
-                  similarity: '0',
-                },
-                {
-                  account: '10012',
-                  name: 'James',
-                  homeworkId: '1729480862809071660',
-                  similarity: '0.2',
-                },
-              ],
-            },
-            {
-              account: '1002',
-              maxSimilarity: '0.2',
-              name: 'EddieZhang',
-              homeworkId: '1729480862809071660',
-              similarList: [
-                {
-                  account: '10021',
-                  name: 'Curry',
-                  homeworkId: '1729480862809071660',
-                  similarity: '0.2',
-                },
-                {
-                  account: '10022',
-                  name: 'Durant',
-                  homeworkId: '1729480862809071660',
-                  similarity: '0',
-                },
-              ],
-            },
-          ]
-          this.$router.push({ name: 'tree-view' })
-          this.ifUProgress = false
-          this.showModal = false
-          // }
-        })
-        // })
+        this.$axios
+          .post('/api/check_similarity_async/' + this.jobs[0].workCode + '?similar=' + this.value1)
+          .then((res) => {
+            // sleep(2000).then(() => {
+            if (res.code === 200) {
+              console.log(res.data.result.matrix)
+              matrix.value = res.data.result.matrix
+              // matrix.value = [
+              //   {
+              //     account: '1001',
+              //     maxSimilarity: '0.2',
+              //     name: 'Eddie',
+              //     homeworkId: '1729480862809071660',
+              //     similarList: [
+              //       {
+              //         account: '10011',
+              //         name: 'Irving',
+              //         homeworkId: '1729480862809071660',
+              //         similarity: '0',
+              //       },
+              //       {
+              //         account: '10012',
+              //         name: 'James',
+              //         homeworkId: '1729480862809071660',
+              //         similarity: '0.2',
+              //       },
+              //     ],
+              //   },
+              //   {
+              //     account: '1002',
+              //     maxSimilarity: '0.2',
+              //     name: 'EddieZhang',
+              //     homeworkId: '1729480862809071660',
+              //     similarList: [
+              //       {
+              //         account: '10021',
+              //         name: 'Curry',
+              //         homeworkId: '1729480862809071660',
+              //         similarity: '0.2',
+              //       },
+              //       {
+              //         account: '10022',
+              //         name: 'Durant',
+              //         homeworkId: '1729480862809071660',
+              //         similarity: '0',
+              //       },
+              //     ],
+              //   },
+              // ]
+              this.$router.push({ name: 'tree-view' })
+              this.ifUProgress = false
+              this.showModal = false
+            }
+            // })
+          })
       },
     },
   }

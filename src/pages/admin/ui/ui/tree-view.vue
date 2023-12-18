@@ -20,7 +20,7 @@
           preset="secondary"
           class="w-full"
           @click="
-            homeworkAId = row.rowData.homeworkId;
+            homeworkAId = row.rowData.homeworkId
             row.toggleRowDetails()
           "
         >
@@ -31,10 +31,10 @@
         <div class="flex gap-2">
           <form>
             <tr>
-              <td>
+              <td style="padding-right: 40px; padding-left: 60px">
                 <h3>账号：</h3>
               </td>
-              <td>
+              <td style="padding-right: 40px">
                 <h3>姓名：</h3>
               </td>
               <td>
@@ -42,13 +42,13 @@
               </td>
             </tr>
             <tr v-for="(item, index) in rowData.similarList" :key="index">
-              <td>
+              <td v-if="item.similarity !== '0'" style="padding-right: 40px; padding-left: 60px">
                 <h3 style="color: rgb(110, 133, 200)">{{ item.account }}</h3>
               </td>
-              <td>
+              <td v-if="item.similarity !== '0'" style="padding-right: 40px">
                 <h3 style="color: rgb(110, 133, 200)">{{ item.name }}</h3>
               </td>
-              <td>
+              <td v-if="item.similarity !== '0'">
                 <Button class="button" @click="showSimilarContent(item.homeworkId)"
                   >{{ item.similarity }} 查看相似内容
                 </Button>
@@ -115,19 +115,22 @@
       },
       showSimilarContent(homeworkBId) {
         this.homeworkBId = homeworkBId
+        this.fileA = { pdf: '' }
+        this.fileB = { pdf: '' }
         console.log(this.homeworkAId, this.homeworkBId)
-        this.fileA.pdf = 'http://127.0.0.1:5173/upload/' + this.homeworkAId + '.pdf'
-        this.fileB.pdf = 'http://127.0.0.1:5173/upload/' + this.homeworkBId + '.pdf'
-        console.log(this.fileA.pdf, this.fileB.pdf)
-        // this.$axios
-        //   .post('/api/mark_similarity?homeworkIdOne=' + this.homeworkAId + '&homeworkIdTwo=' + this.homeworkBId)
-        //   .then((res) => {
-        //     console.log(res)
-        //     this.homeworkAId = res.data.highlightPdf[0]
-        //     this.homeworkBId = res.data.highlightPdf[0]
         // this.fileA.pdf = 'http://127.0.0.1:5173/upload/' + this.homeworkAId + '.pdf'
         // this.fileB.pdf = 'http://127.0.0.1:5173/upload/' + this.homeworkBId + '.pdf'
-        //   })
+        console.log(this.fileA.pdf, this.fileB.pdf)
+        this.$axios
+          .post('/api/mark_similarity?homeworkIdOne=' + this.homeworkAId + '&homeworkIdTwo=' + this.homeworkBId)
+          .then((res) => {
+            console.log('这里是获取高亮内容的res', res)
+            this.homeworkAId = res.data.highlightPdf[0]
+            this.homeworkBId = res.data.highlightPdf[1]
+            this.fileA.pdf = 'http://127.0.0.1:5173/backendUpload/' + this.homeworkAId + '.pdf'
+            this.fileB.pdf = 'http://127.0.0.1:5173/backendUpload/' + this.homeworkBId + '.pdf'
+            console.log(this.fileB.pdf)
+          })
         this.showModal = !this.showModal
       },
     },
