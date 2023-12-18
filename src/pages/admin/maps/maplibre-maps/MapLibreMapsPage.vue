@@ -81,7 +81,7 @@
   import { storeToRefs } from 'pinia'
   import { useGlobalStore } from '../../../../stores/global-store'
   const GlobalStore = useGlobalStore()
-  const { uploadedFileName, userName } = storeToRefs(GlobalStore)
+  const { uploadedFileName } = storeToRefs(GlobalStore)
 
   const img = '/pdf.png'
   const files = ref([])
