@@ -64,7 +64,9 @@
         result.data.forEach((item) => {
           $axios.post('/api/course/list', { course_code: item.courseCode }).then((result) => {
             if (result.code === 200) {
-              options.value.push(result.data[0].courseName + '-' + item.workName)
+              options.value.push(
+                result.data[0].courseName + '-' + item.workName + '&' + item.courseCode + '&' + item.workCode,
+              )
             }
           })
         })
@@ -81,11 +83,11 @@
   })
 
   const corseName = computed(() => {
-    return value.value.split('-')[0]
+    return value.value.split('&')[0].split('-')[0]
   })
 
   const workName = computed(() => {
-    return value.value.split('-')[1]
+    return value.value.split('&')[0].split('-')[1]
   })
 
   const JobId = ref('')
@@ -143,9 +145,9 @@
         isCommit: 1,
         jobStatus: 0,
         commitTime: moment().utcOffset(480).format('YYYY-MM-DD HH:mm:ss'),
-        courseCode: 10,
+        courseCode: value.value.split('&')[1],
         courseName: corseName.value,
-        workCode: 101,
+        workCode: value.value.split('&')[2],
         workName: workName.value,
       })
       if (result.code === 200) {

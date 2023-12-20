@@ -19,10 +19,7 @@
           :icon="isExpanded ? 'va-arrow-up' : 'va-arrow-down'"
           preset="secondary"
           class="w-full"
-          @click="
-            homeworkAId = row.rowData.homeworkId
-            row.toggleRowDetails()
-          "
+          @click=";(homeworkAId = row.rowData.homeworkId), row.toggleRowDetails()"
         >
           {{ isExpanded ? '隐藏详情' : '查看详情' }}
         </VaButton>

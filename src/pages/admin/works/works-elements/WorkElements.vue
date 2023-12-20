@@ -59,10 +59,7 @@
   let course = ref({ text: '', value: '' })
   let workCode = ref(0)
   let workName = ref('')
-  let courses = ref([
-    { text: 'WebDev', value: '10' },
-    { text: 'DataAnalyze', value: '32' },
-  ]) as any
+  let courses = ref([]) as any
 
   const currentPage = ref(1)
   const visiblePages = ref(9)
@@ -83,6 +80,7 @@
   }
 
   onMounted(() => fetchworks(currentPage.value)) // Fetch works when component is mounted
+  onMounted(() => fetchCourses())
 
   const isValid = computed(() => workCode.value && workName.value && course.value.value)
 
@@ -101,6 +99,21 @@
           workCode.value = 0
           workName.value = ''
           course.value = { text: '', value: '' }
+        }
+      })
+      .catch((error: any) => {
+        console.log(error)
+      })
+  }
+
+  function fetchCourses() {
+    $axios
+      .post('/api/course/list')
+      .then((response: any) => {
+        if (response.code === 200) {
+          response.data.forEach((item: any) => {
+            courses.value.push({ text: item.courseName, value: item.courseCode })
+          })
         }
       })
       .catch((error: any) => {
