@@ -20,7 +20,7 @@
       clearable-icon="va-clear"
     />
     <VaButton v-if="jobs[0]" color="info" class="mr-6 mb-2" @click="showModal = !showModal"> 抄袭检测 </VaButton>
-    <VaButton v-if="jobs[0]" color="info" class="mr-6 mb-2"> 辅助批改 </VaButton>
+    <VaButton v-if="jobs[0]" color="info" class="mr-6 mb-2" @click="showScoring = !showScoring"> 辅助批改 </VaButton>
   </div>
 
   <div>
@@ -109,6 +109,40 @@
       </div>
     </VaModal>
   </div>
+
+  <div>
+    <VaModal
+      v-model="showScoring"
+      ok-text="Apply"
+      close-button
+      fullscreen="true"
+      @ok="assistScoring"
+      @close="ifUProgress = false"
+    >
+      <h3 class="va-h3">辅助批改</h3>
+      <br />
+      <br />
+      <VaPopover placement="left" message="设三个参考值各占辅助评分的参考比例 三个比例值之和为1">
+        <h2 style="color: rgb(110, 133, 200)">🔍评分参考占比：</h2>
+      </VaPopover>
+      <br />
+      <br />
+      抄袭分数占比
+      <VaSelect v-model="assitValue1" :options="assitValues1" placeholder="Select an option" />
+      <br />
+      <br />
+      内容评分占比
+      <VaSelect v-model="assitValue2" :options="assitValues2" placeholder="Select an option" />
+      <br />
+      <br />
+      参考文献评分占比
+      <VaSelect v-model="assitValue3" :options="assitValues3" placeholder="Select an option" />
+      <br />
+      <div v-if="ifUProgress">
+        <va-progress-bar size="large" indeterminate />
+      </div>
+    </VaModal>
+  </div>
 </template>
 
 <script>
@@ -128,6 +162,8 @@
         value: 'fingerprint_jar',
         courses: [],
         course: '',
+        courseCode: '',
+        workName: '',
         jobs: [],
         columns: [
           { key: 'id', label: '序号', sortable: true },
@@ -135,7 +171,7 @@
           { key: 'commitTime', label: '提交时间', sortable: true },
           { key: 'jobStatus', label: '状态', name: 'jobStatus', sortable: true },
           // { key: 'phone', label: '附件' },
-          // { key: 'phone', label: '辅助评分分数' },
+          { key: 'auxiliaryScore', label: '辅助评分分数' },
           { key: 'phone', label: '学生作业' },
           { key: 'score', label: '成绩' },
           // { key: 'phone', label: '评语' },
@@ -143,8 +179,15 @@
         perPage: 10,
         currentPage: 1,
         showModal: false,
+        showScoring: false,
         options1: ['0.1', '0.2', '0.3', '0.4', '0.5', '0.6', '0.7', '0.8', '0.9', '1'],
         value1: 0.2,
+        assitValue1: 0,
+        assitValue2: 0,
+        assitValue3: 0,
+        assitValues1: ['0', '0.1', '0.2', '0.3', '0.4', '0.5', '0.6', '0.7', '0.8', '0.9', '1'],
+        assitValues2: ['0', '0.1', '0.2', '0.3', '0.4', '0.5', '0.6', '0.7', '0.8', '0.9', '1'],
+        assitValues3: ['0', '0.1', '0.2', '0.3', '0.4', '0.5', '0.6', '0.7', '0.8', '0.9', '1'],
       }
     },
     computed: {
@@ -170,14 +213,14 @@
       },
       course: {
         handler(value) {
-          let courseCode = ''
+          this.workName = value.split('-')[1]
           this.$axios.post('/api/course/list', { course_name: value.split('-')[0] }).then((result) => {
             if (result.code === 200) {
-              courseCode = result.data[0].courseCode
+              this.courseCode = result.data[0].courseCode
               this.$axios
                 .post('/api/job/list', {
-                  course_code: courseCode,
-                  work_name: value.split('-')[1],
+                  course_code: this.courseCode,
+                  work_name: this.workName,
                   is_commit: 1,
                 })
                 .then((result) => {
@@ -243,58 +286,59 @@
         this.$axios
           .post('/api/check_similarity_async/' + this.jobs[0].workCode + '?similar=' + this.value1)
           .then((res) => {
-            // sleep(2000).then(() => {
             if (res.code === 200) {
               console.log(res.data.result.matrix)
               matrix.value = res.data.result.matrix
-              // matrix.value = [
-              //   {
-              //     account: '1001',
-              //     maxSimilarity: '0.2',
-              //     name: 'Eddie',
-              //     homeworkId: '1729480862809071660',
-              //     similarList: [
-              //       {
-              //         account: '10011',
-              //         name: 'Irving',
-              //         homeworkId: '1729480862809071660',
-              //         similarity: '0',
-              //       },
-              //       {
-              //         account: '10012',
-              //         name: 'James',
-              //         homeworkId: '1729480862809071660',
-              //         similarity: '0.2',
-              //       },
-              //     ],
-              //   },
-              //   {
-              //     account: '1002',
-              //     maxSimilarity: '0.2',
-              //     name: 'EddieZhang',
-              //     homeworkId: '1729480862809071660',
-              //     similarList: [
-              //       {
-              //         account: '10021',
-              //         name: 'Curry',
-              //         homeworkId: '1729480862809071660',
-              //         similarity: '0.2',
-              //       },
-              //       {
-              //         account: '10022',
-              //         name: 'Durant',
-              //         homeworkId: '1729480862809071660',
-              //         similarity: '0',
-              //       },
-              //     ],
-              //   },
-              // ]
               this.$router.push({ name: 'tree-view' })
               this.ifUProgress = false
               this.showModal = false
             }
-            // })
           })
+      },
+      assistScoring() {
+        this.showScoring = true
+        this.ifUProgress = true
+        console.log(this.assitValue1, this.assitValue2, this.assitValue3)
+        if ((this.assitValue1 *= 1) + (this.assitValue2 *= 1) + (this.assitValue3 *= 1) !== 1) {
+          console.log(this.assitValue1 + this.assitValue2 + this.assitValue3)
+          this.showScoring = true
+          this.ifUProgress = false
+          this.$vaModal.confirm('三个值的占比之和必须为 1  请调整后重试')
+        } else {
+          this.$axios
+            .post(
+              '/api/auxiliary_score/' +
+                this.jobs[0].workCode +
+                '?ratio_pl=' +
+                this.assitValue1 +
+                '&ratio_content=' +
+                this.assitValue2 +
+                '&ratio_ref=' +
+                this.assitValue3,
+              console.log('辅助批改'),
+            )
+            .then((res) => {
+              if (res.code === 200) {
+                //辅助评分完成后刷新数据
+                this.$axios
+                  .post('/api/job/list', {
+                    course_code: this.courseCode,
+                    work_name: this.workName,
+                    is_commit: 1,
+                  })
+                  .then((result) => {
+                    if (result.code !== 200) {
+                      console.log(result.data)
+                      this.jobs = []
+                    } else {
+                      this.jobs = result.data
+                    }
+                  })
+              }
+              this.ifUProgress = false
+              this.showScoring = false
+            })
+        }
       },
     },
   }

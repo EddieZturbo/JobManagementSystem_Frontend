@@ -9,68 +9,7 @@ import workManage from '../pages/admin/works/works-elements/WorkElements.vue'
 
 import RouteViewComponent from '../layouts/RouterBypass.vue'
 
-const routes: (
-  | { redirect: { name: string }; path: string }
-  | {
-      path: string
-      component: any
-      children: (
-        | { path: string; component: () => any; name: string }
-        | {
-            path: string
-            component: any
-            children: (
-              | { path: string; component: () => any; meta: { wikiLink: string }; name: string }
-              | { path: string; component: () => any; meta: { wikiLink: string }; name: string }
-              | { path: string; component: () => any; meta: { wikiLink: string }; name: string }
-              | { path: string; component: () => any; meta: { wikiLink: string }; name: string }
-              | { path: string; component: () => any; meta: { wikiLink: string }; name: string }
-              | { path: string; component: () => any; meta: { wikiLink: string }; name: string }
-            )[]
-            name: string
-          }
-        | { path: string; component: any; meta: { wikiLink: string }; name: string }
-        | { path: string; component: () => any; name: string }
-        | {
-            path: string
-            component: any
-            children: { path: string; component: () => any; meta: { wikiLink: string }; name: string }[]
-            name: string
-          }
-        | {
-            path: string
-            component: any
-            children: (
-              | { path: string; component: () => any; name: string }
-              | { path: string; component: () => any; name: string }
-            )[]
-            name: string
-          }
-        | { path; component; children; name }
-      )[]
-      name: string
-    }
-  | {
-      path: string
-      component: { components; data; computed; name; setup }
-      children: (
-        | { path: string; component: () => any; name: string }
-        | { path: string; component: () => any; name: string }
-        | { path: string; component: () => any; name: string }
-        | { redirect: { name: string }; path: string }
-      )[]
-    }
-  | {
-      path: string
-      component: any
-      children: (
-        | { path: string; component: () => any; name: string }
-        | { path: string; component: () => any; name: string }
-        | { path: string; component: () => any; name: string }
-        | { path: string; component: () => any; name: string }
-      )[]
-    }
-)[] = [
+const routes: RouteRecordRaw[] = [
   {
     path: '/:catchAll(.*)',
     redirect: { name: 'charts' },
