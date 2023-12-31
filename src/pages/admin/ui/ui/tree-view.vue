@@ -93,6 +93,8 @@
         homeworkAId: '',
         homeworkBId: '',
         similarities: matrix.value,
+        perPage: 10,
+        currentPage: 1,
         columns: [
           { key: 'account', label: '账号', sortable: true },
           { key: 'name', label: '姓名' },
@@ -103,7 +105,7 @@
     },
     computed: {
       pages() {
-        return Math.ceil(this.perPage)
+        return Math.ceil(this.similarities.length / this.perPage) + 1
       },
     },
     methods: {

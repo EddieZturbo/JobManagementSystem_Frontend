@@ -180,7 +180,7 @@
         currentPage: 1,
         showModal: false,
         showScoring: false,
-        options1: ['0.1', '0.2', '0.3', '0.4', '0.5', '0.6', '0.7', '0.8', '0.9', '1'],
+        options1: ['0', '0.05', '0.1', '0.2', '0.3', '0.4', '0.5', '0.6', '0.7', '0.8', '0.9', '1'],
         value1: 0.2,
         assitValue1: 0,
         assitValue2: 0,
@@ -288,6 +288,16 @@
           .then((res) => {
             if (res.code === 200) {
               console.log(res.data.result.matrix)
+              //冒泡排序res.data.result.matrix
+              for (let i = 0; i < res.data.result.matrix.length; i++) {
+                for (let j = 0; j < res.data.result.matrix.length - i - 1; j++) {
+                  if (res.data.result.matrix[j].maxSimilarity < res.data.result.matrix[j + 1].maxSimilarity) {
+                    let temp = res.data.result.matrix[j]
+                    res.data.result.matrix[j] = res.data.result.matrix[j + 1]
+                    res.data.result.matrix[j + 1] = temp
+                  }
+                }
+              }
               matrix.value = res.data.result.matrix
               this.$router.push({ name: 'tree-view' })
               this.ifUProgress = false
