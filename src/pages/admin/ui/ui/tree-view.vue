@@ -105,7 +105,7 @@
     },
     computed: {
       pages() {
-        return Math.ceil(this.similarities.length / this.perPage) + 1
+        return Math.ceil(this.similarities.length / this.perPage)
       },
     },
     methods: {
