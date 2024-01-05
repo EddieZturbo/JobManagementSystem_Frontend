@@ -308,9 +308,7 @@
       assistScoring() {
         this.showScoring = true
         this.ifUProgress = true
-        console.log(this.assitValue1, this.assitValue2, this.assitValue3)
-        if ((this.assitValue1 *= 1) + (this.assitValue2 *= 1) + (this.assitValue3 *= 1) !== 1) {
-          console.log(this.assitValue1 + this.assitValue2 + this.assitValue3)
+        if (this.assitValue1 * 10 + this.assitValue2 * 10 + this.assitValue3 * 10 !== 10) {
           this.showScoring = true
           this.ifUProgress = false
           this.$vaModal.confirm('三个值的占比之和必须为 1  请调整后重试')
