@@ -29,7 +29,7 @@ export default {
         },
         {
           name: 'progress-bars-1',
-          displayName: '学生作业排名',
+          displayName: '综述年份引用情况',
         },
         {
           name: 'progress-bars-2',
@@ -37,11 +37,15 @@ export default {
         },
         {
           name: 'progress-bars-3',
-          displayName: '作业优秀率',
+          displayName: '作业评判标准',
         },
         {
           name: 'progress-bars-4',
           displayName: '作业数据篇幅分布情况',
+        },
+        {
+          name: 'progress-bars-6',
+          displayName: '作业完成用时情况',
         },
       ],
     },

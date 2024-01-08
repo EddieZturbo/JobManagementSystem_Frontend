@@ -77,6 +77,14 @@ const routes: RouteRecordRaw[] = [
               wikiLink: 'https://github.com/epicmaxco/vuestic-admin/wiki/Progress-Bars',
             },
           },
+          {
+            name: 'progress-bars-6',
+            path: 'progress-bars-6',
+            component: () => import('../pages/admin/jobStatisticChart/charts/ProgressBars6.vue'),
+            meta: {
+              wikiLink: 'https://github.com/epicmaxco/vuestic-admin/wiki/Progress-Bars',
+            },
+          },
         ],
       },
       {

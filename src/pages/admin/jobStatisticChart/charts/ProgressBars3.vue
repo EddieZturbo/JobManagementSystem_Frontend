@@ -21,7 +21,7 @@
           option = {
             color: ['#67F9D8', '#FFE434', '#56A3F1', '#FF917C'],
             title: {
-              text: 'Customized Radar Chart',
+              text: '评断标准',
             },
             legend: {},
             radar: [
@@ -51,23 +51,22 @@
                 },
                 axisLine: {
                   lineStyle: {
-                    color: 'rgba(211, 253, 250, 0.8)',
+                    color: '#67f9d8',
                   },
                 },
                 splitLine: {
                   lineStyle: {
-                    color: 'rgba(211, 253, 250, 0.8)',
+                    color: '#67f9d8',
                   },
                 },
               },
               {
                 indicator: [
-                  { text: 'Indicator1', max: 150 },
-                  { text: 'Indicator2', max: 150 },
-                  { text: 'Indicator3', max: 150 },
-                  { text: 'Indicator4', max: 120 },
-                  { text: 'Indicator5', max: 108 },
-                  { text: 'Indicator6', max: 72 },
+                  { text: '抄袭情况', max: 50 },
+                  { text: '引文情况', max: 10 },
+                  { text: '内容结构', max: 5 },
+                  { text: '文章质量', max: 30 },
+                  { text: '篇幅情况', max: 5 },
                 ],
                 center: ['75%', '50%'],
                 radius: 120,
@@ -106,31 +105,48 @@
                 radarIndex: 1,
                 data: [
                   {
-                    value: [120, 118, 130, 100, 99, 70],
-                    name: 'Data C',
-                    symbol: 'rect',
-                    symbolSize: 12,
-                    lineStyle: {
-                      type: 'dashed',
-                    },
-                    label: {
-                      show: true,
-                      formatter: function (params) {
-                        return params.value
-                      },
-                    },
-                  },
-                  {
-                    value: [100, 93, 50, 90, 70, 60],
+                    value: [45, 8, 5, 28, 5],
                     name: 'Data D',
                     areaStyle: {
                       color: new echarts.graphic.RadialGradient(0.1, 0.6, 1, [
                         {
-                          color: 'rgba(255, 145, 124, 0.1)',
+                          color: '#67f9d8',
                           offset: 0,
                         },
                         {
                           color: 'rgba(255, 145, 124, 0.9)',
+                          offset: 1,
+                        },
+                      ]),
+                    },
+                  },
+                  {
+                    value: [42, 5, 3, 21, 5],
+                    name: 'Data D',
+                    areaStyle: {
+                      color: new echarts.graphic.RadialGradient(0.1, 0.6, 1, [
+                        {
+                          color: '#67f9d8',
+                          offset: 0,
+                        },
+                        {
+                          color: 'rgba(255, 145, 12, 0.9)',
+                          offset: 1,
+                        },
+                      ]),
+                    },
+                  },
+                  {
+                    value: [36, 5, 2, 10, 5],
+                    name: 'Data D',
+                    areaStyle: {
+                      color: new echarts.graphic.RadialGradient(0.1, 0.6, 1, [
+                        {
+                          color: '#67f9d8',
+                          offset: 0,
+                        },
+                        {
+                          color: 'rgba(255, 145, 12, 0.9)',
                           offset: 1,
                         },
                       ]),
