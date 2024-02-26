@@ -9,8 +9,6 @@
             <va-sidebar-item-title>
               {{ t(route.displayName) }}
             </va-sidebar-item-title>
-
-            <va-icon v-if="route.children" :name="accordionValue[idx] ? 'expand_less' : 'expand_more'" />
           </va-sidebar-item-content>
         </va-sidebar-item>
       </template>

@@ -145,6 +145,14 @@ const routes: RouteRecordRaw[] = [
             },
           },
           {
+            name: 'cpSituation',
+            path: 'cpSituation',
+            component: () => import('../pages/admin/ui/ui/ProgressBars4cp.vue'),
+            meta: {
+              wikiLink: 'https://github.com/epicmaxco/vuestic-admin/wiki/Charts',
+            },
+          },
+          {
             name: 'tree-view',
             path: 'tree-view',
             component: () => import('../pages/admin/ui/ui/tree-view.vue'),

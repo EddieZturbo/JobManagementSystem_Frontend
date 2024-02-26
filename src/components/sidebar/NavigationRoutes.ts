@@ -106,10 +106,10 @@ export default {
           name: 'lists',
           displayName: '抄袭检测',
         },
-        // {
-        //   name: 'tree-view',
-        //   displayName: '汇总数据',
-        // },
+        {
+          name: 'cpSituation',
+          displayName: '抄袭情况',
+        },
       ],
     },
   ] as INavigationRoute[],

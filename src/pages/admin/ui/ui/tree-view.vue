@@ -7,6 +7,7 @@
   <div v-if="!showModal">
     <VaButton text-color="#fffff0" class="mr-3 mb-2" @click="returnDetectPage"> 返回超级检测 </VaButton>
     <VaDataTable
+      class="table"
       :items="similarities"
       :columns="columns"
       :cell-bind="getCellBind"
@@ -18,7 +19,6 @@
         <VaButton
           :icon="isExpanded ? 'va-arrow-up' : 'va-arrow-down'"
           preset="secondary"
-          class="w-full"
           @click=";(homeworkAId = row.rowData.homeworkId), row.toggleRowDetails()"
         >
           {{ isExpanded ? '隐藏详情' : '查看详情' }}
@@ -28,14 +28,14 @@
         <div class="flex gap-2">
           <form>
             <tr>
-              <td style="padding-right: 40px; padding-left: 60px">
-                <h3>账号：</h3>
+              <td style="padding-right: 380px; padding-left: 50px">
+                <h3>账号</h3>
               </td>
-              <td style="padding-right: 40px">
-                <h3>姓名：</h3>
+              <td style="padding-right: 380px">
+                <h3>姓名</h3>
               </td>
               <td>
-                <h3>相似度：</h3>
+                <h3>相似度</h3>
               </td>
             </tr>
             <tr v-for="(item, index) in rowData.similarList" :key="index">
@@ -158,5 +158,25 @@
     /* No background on hover */
     color: #0056b3;
     /* Change text color on hover */
+  }
+
+  .table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .table td {
+    padding: 16px;
+    border-bottom: 1px solid #ebeef5;
+    color: #474849;
+    font-family: 'Microsoft YaHei', '宋体';
+    font-size: 16px;
+    font-weight: normal;
+    line-height: 1.5;
+    vertical-align: middle;
+  }
+
+  .table tr:nth-child(2n) {
+    background-color: #fafafa;
   }
 </style>

@@ -35,6 +35,7 @@
 
   <div>
     <VaDataTable
+      class="table"
       :items="jobs"
       :columns="columns"
       :cell-bind="getCellBind"
@@ -170,17 +171,14 @@
           { key: 'studentName', label: '姓名', sortable: true },
           { key: 'commitTime', label: '提交时间', sortable: true },
           { key: 'jobStatus', label: '状态', name: 'jobStatus', sortable: true },
-          // { key: 'phone', label: '附件' },
           { key: 'auxiliaryScore', label: '辅助评分分数' },
-          { key: 'phone', label: '学生作业' },
           { key: 'score', label: '成绩' },
-          // { key: 'phone', label: '评语' },
         ],
         perPage: 10,
         currentPage: 1,
         showModal: false,
         showScoring: false,
-        options1: ['0', '0.05', '0.1', '0.2', '0.3', '0.4', '0.5', '0.6', '0.7', '0.8', '0.9', '1'],
+        options1: ['0', '0.03', '0.05', '0.1', '0.2', '0.3', '0.4', '0.5', '0.6', '0.7', '0.8', '0.9', '1'],
         value1: 0.2,
         assitValue1: 0,
         assitValue2: 0,
@@ -378,5 +376,25 @@
 
   .va-data-table__table-expanded-content td {
     background-color: var(--va-background-element);
+  }
+
+  .table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+
+  .table td {
+    padding: 16px;
+    border-bottom: 1px solid #ebeef5;
+    color: #474849;
+    font-family: 'Microsoft YaHei', '宋体';
+    font-size: 16px;
+    font-weight: normal;
+    line-height: 1.5;
+    vertical-align: middle;
+  }
+
+  .table tr:nth-child(2n) {
+    background-color: #fafafa;
   }
 </style>
