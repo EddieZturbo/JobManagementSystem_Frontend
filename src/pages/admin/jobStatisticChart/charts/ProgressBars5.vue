@@ -10,7 +10,7 @@
     data() {
       return {
         option: {
-          legend: {},
+          gend: {},
           tooltip: {},
           dataset: {
             source: [['状态', '已提交', '未批改', '不及格']],
@@ -18,6 +18,7 @@
           xAxis: { type: 'category' },
           yAxis: {},
           series: [{ type: 'bar' }, { type: 'bar' }, { type: 'bar' }],
+          backgroundColor: '#ffffff', // 设置背景色为白色
         },
       }
     },
